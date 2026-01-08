@@ -3,6 +3,10 @@ name = "python-vslam"
 version = "0.1.0"
 description = "Visual SLAM implementation in Python"
 requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.2.6",
+    "opencv-python>=4.12.0.88",
+]
 
 [project.optional-dependencies]
 dev = [
@@ -14,6 +18,7 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
+pythonpath = ["src"]
 
 [tool.mypy]
 python_version = "3.10"
@@ -22,3 +27,8 @@ strict = true
 [tool.ruff]
 line-length = 88
 target-version = "py310"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=9.0.2",
+]
