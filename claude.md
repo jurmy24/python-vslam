@@ -147,6 +147,7 @@ uv run ruff format .
 2. **Don't edit pyproject.toml manually for deps**: Use `uv add` instead to keep lock file in sync
 3. **Run tests before committing**: `uv run pytest` to catch issues early
 4. **Use type hints**: Enable mypy to catch type errors during development
+5. **Never use `uv pip`**: Always use `uv add`, `uv sync`, and `uv run` instead of `uv pip install`
 
 ## Troubleshooting
 

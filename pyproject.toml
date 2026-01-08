@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "python-vslam"
 version = "0.1.0"
@@ -6,6 +10,8 @@ requires-python = ">=3.10"
 dependencies = [
     "numpy>=2.2.6",
     "opencv-python>=4.12.0.88",
+    "pyyaml>=6.0",
+    "rerun-sdk>=0.18",
 ]
 
 [project.optional-dependencies]
@@ -32,3 +38,6 @@ target-version = "py310"
 dev-dependencies = [
     "pytest>=9.0.2",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vslam"]
