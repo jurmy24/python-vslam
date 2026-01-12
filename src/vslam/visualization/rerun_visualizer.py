@@ -1,10 +1,18 @@
 """Rerun-based visualization for stereo SLAM."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 import rerun as rr
 import rerun.blueprint as rrb
 
 from ..frontend.stereo_frontend import StereoFrame
+
+if TYPE_CHECKING:
+    from ..frontend.pose import SE3
+    from ..frontend.visual_odometry import VOFrame
 
 
 class RerunVisualizer:
@@ -198,4 +206,118 @@ class RerunVisualizer:
                 translation=position,
                 mat3x3=rotation,
             ),
+        )
+
+    def log_trajectory(
+        self,
+        positions: np.ndarray,
+        entity_path: str = "world/trajectory",
+    ) -> None:
+        """Log camera trajectory as a 3D line strip.
+
+        Args:
+            positions: Nx3 array of camera positions in world frame
+            entity_path: Rerun entity path for the trajectory
+        """
+        if len(positions) < 2:
+            return
+
+        # Log trajectory as line strip (yellow)
+        rr.log(
+            entity_path,
+            rr.LineStrips3D(
+                [positions],
+                colors=[[255, 255, 0]],  # Yellow
+                radii=0.01,
+            ),
+        )
+
+        # Log current position as a larger point (cyan)
+        rr.log(
+            f"{entity_path}/current",
+            rr.Points3D(
+                [positions[-1]],
+                colors=[[0, 255, 255]],  # Cyan
+                radii=0.05,
+            ),
+        )
+
+    def log_trajectory_from_poses(
+        self,
+        trajectory: list[SE3],
+        entity_path: str = "world/trajectory",
+    ) -> None:
+        """Log camera trajectory from list of SE3 poses.
+
+        Args:
+            trajectory: List of SE3 poses
+            entity_path: Rerun entity path for the trajectory
+        """
+        if len(trajectory) == 0:
+            return
+
+        positions = np.array([pose.position for pose in trajectory], dtype=np.float64)
+        self.log_trajectory(positions, entity_path)
+
+    def log_vo_frame(self, vo_frame: VOFrame) -> None:
+        """Log a visual odometry frame with pose and stereo data.
+
+        Logs:
+        - Stereo frame data (images, features, matches, 3D points)
+        - Camera pose/position
+        - Accumulated trajectory
+
+        Args:
+            vo_frame: VOFrame from visual odometry
+        """
+        # Set timestamp
+        timestamp_sec = vo_frame.timestamp_ns / 1e9
+        rr.set_time("timestamp", duration=timestamp_sec)
+
+        # Log stereo frame data
+        self.log_frame(vo_frame.stereo_frame)
+
+        # Log camera pose
+        self.log_camera_pose(
+            position=vo_frame.pose.position,
+            rotation=vo_frame.pose.rotation,
+            entity_path="world/camera",
+        )
+
+    def log_map_points(
+        self,
+        positions: np.ndarray,
+        entity_path: str = "world/map",
+    ) -> None:
+        """Log sparse map points.
+
+        Args:
+            positions: Nx3 array of 3D map point positions
+            entity_path: Rerun entity path for the map
+        """
+        if len(positions) == 0:
+            return
+
+        # Filter invalid points
+        valid_mask = np.isfinite(positions).all(axis=1)
+        valid_positions = positions[valid_mask]
+
+        if len(valid_positions) == 0:
+            return
+
+        # Color by height (y-coordinate since Y is typically up/down)
+        heights = valid_positions[:, 1]
+        h_min, h_max = np.percentile(heights, [5, 95])
+        h_range = max(h_max - h_min, 0.1)
+        normalized = np.clip((heights - h_min) / h_range, 0, 1)
+
+        # Purple to white gradient
+        colors = np.zeros((len(valid_positions), 3), dtype=np.uint8)
+        colors[:, 0] = (128 + normalized * 127).astype(np.uint8)  # R: 128-255
+        colors[:, 1] = (normalized * 255).astype(np.uint8)  # G: 0-255
+        colors[:, 2] = (255 - normalized * 127).astype(np.uint8)  # B: 255-128
+
+        rr.log(
+            entity_path,
+            rr.Points3D(valid_positions, colors=colors, radii=0.03),
         )

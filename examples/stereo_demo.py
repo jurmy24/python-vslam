@@ -27,7 +27,9 @@ def main() -> None:
 
     # Initialize components
     print("Initializing stereo frontend...")
-    reader = DatasetReader(dataset_path)
+    reader = DatasetReader(
+        dataset_path
+    )  # Could undistort images already here instead of in the StereoFrontend
     frontend = StereoFrontend.from_dataset_path(dataset_path, n_features=n_features)
     visualizer = RerunVisualizer("python-vslam")
 
@@ -53,6 +55,7 @@ def main() -> None:
                 f"{frame.num_features_left:4d} features, "
                 f"{frame.num_matches:3d} matches, "
                 f"{frame.num_3d_points:3d} 3D points"
+                f"Average depth: {frame.points_3d.mean():.2f} m"
             )
 
     print()
