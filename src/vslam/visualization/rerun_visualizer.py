@@ -321,3 +321,70 @@ class RerunVisualizer:
             entity_path,
             rr.Points3D(valid_positions, colors=colors, radii=0.03),
         )
+
+    def log_loop_closure(
+        self,
+        from_position: np.ndarray,
+        to_position: np.ndarray,
+        entity_path: str = "world/loop_closures",
+    ) -> None:
+        """Log a loop closure edge as a line connecting two poses.
+
+        Args:
+            from_position: 3D position of query keyframe
+            to_position: 3D position of matched keyframe
+            entity_path: Rerun entity path for loop closures
+        """
+        # Log loop closure as a red line connecting the two poses
+        rr.log(
+            entity_path,
+            rr.LineStrips3D(
+                [[from_position, to_position]],
+                colors=[[255, 0, 0]],  # Red
+                radii=0.02,
+            ),
+        )
+
+        # Log markers at both ends (magenta)
+        rr.log(
+            f"{entity_path}/endpoints",
+            rr.Points3D(
+                [from_position, to_position],
+                colors=[[255, 0, 255]],  # Magenta
+                radii=0.08,
+            ),
+        )
+
+    def log_ground_truth_trajectory(
+        self,
+        positions: np.ndarray,
+        entity_path: str = "world/ground_truth",
+    ) -> None:
+        """Log ground truth trajectory as a 3D line strip.
+
+        Args:
+            positions: Nx3 array of ground truth positions
+            entity_path: Rerun entity path for the ground truth trajectory
+        """
+        if len(positions) < 2:
+            return
+
+        # Log ground truth trajectory as green line
+        rr.log(
+            entity_path,
+            rr.LineStrips3D(
+                [positions],
+                colors=[[0, 255, 0]],  # Green
+                radii=0.01,
+            ),
+        )
+
+        # Log current GT position as a larger green point
+        rr.log(
+            f"{entity_path}/current",
+            rr.Points3D(
+                [positions[-1]],
+                colors=[[0, 200, 0]],  # Darker green
+                radii=0.05,
+            ),
+        )

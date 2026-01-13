@@ -105,6 +105,59 @@ class SE3:
         t = np.asarray(tvec).flatten()
         return cls(rotation=R, translation=t)
 
+    @classmethod
+    def from_quaternion(
+        cls,
+        qw: float,
+        qx: float,
+        qy: float,
+        qz: float,
+        translation: np.ndarray,
+    ) -> SE3:
+        """Create SE3 from quaternion and translation.
+
+        Uses the Hamilton convention where quaternion is (w, x, y, z).
+        This matches EuRoC ground truth format.
+
+        Args:
+            qw: Quaternion scalar (w) component
+            qx: Quaternion x component
+            qy: Quaternion y component
+            qz: Quaternion z component
+            translation: 3D translation vector
+
+        Returns:
+            SE3 transformation
+        """
+        # Normalize quaternion
+        norm = np.sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
+        qw, qx, qy, qz = qw / norm, qx / norm, qy / norm, qz / norm
+
+        # Quaternion to rotation matrix
+        # https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/
+        R = np.array(
+            [
+                [
+                    1 - 2 * qy * qy - 2 * qz * qz,
+                    2 * qx * qy - 2 * qz * qw,
+                    2 * qx * qz + 2 * qy * qw,
+                ],
+                [
+                    2 * qx * qy + 2 * qz * qw,
+                    1 - 2 * qx * qx - 2 * qz * qz,
+                    2 * qy * qz - 2 * qx * qw,
+                ],
+                [
+                    2 * qx * qz - 2 * qy * qw,
+                    2 * qy * qz + 2 * qx * qw,
+                    1 - 2 * qx * qx - 2 * qy * qy,
+                ],
+            ],
+            dtype=np.float64,
+        )
+
+        return cls(rotation=R, translation=np.asarray(translation).flatten())
+
     def to_matrix(self) -> np.ndarray:
         """Convert to 4x4 homogeneous transformation matrix.
 

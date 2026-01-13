@@ -233,6 +233,25 @@ class Map:
         point.is_valid = False
         return True
 
+    def update_point_position(self, point_id: int, position: np.ndarray) -> bool:
+        """Update the 3D position of a map point.
+
+        Used by bundle adjustment to apply optimized positions.
+
+        Args:
+            point_id: ID of the map point
+            position: New 3D position in world frame
+
+        Returns:
+            True if point was found and updated
+        """
+        point = self.get_point(point_id)
+        if point is None:
+            return False
+
+        point.update_position(position)
+        return True
+
     def get_all_points(self) -> list[MapPoint]:
         """Return all valid map points.
 
