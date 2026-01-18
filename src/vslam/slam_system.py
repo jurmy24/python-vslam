@@ -26,7 +26,8 @@ from .backend import (
     KeyframeMessage,
     MapPointData,
 )
-from .frontend import SE3, StereoFrontend, VisualOdometry, VOFrame
+from .frontend import SE3
+from .frontend.vo import StereoFrontend, VisualOdometry, VOFrame
 from .loop_closure import (
     GlobalCorrectionMessage,
     LoopClosureProcess,
@@ -35,7 +36,7 @@ from .loop_closure import (
 )
 
 if TYPE_CHECKING:
-    from .frontend.map_point import MapPoint
+    from .frontend.vo.map_point import MapPoint
 
 
 @dataclass

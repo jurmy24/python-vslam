@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from .feature_detector import FeatureDetector, Features
-from .stereo_camera import StereoCamera
+from ..stereo_camera import StereoCamera
 from .stereo_matcher import StereoMatcher, StereoMatches
 
 

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
-from .pose import SE3
+from ..pose import SE3
 
 
 @dataclass

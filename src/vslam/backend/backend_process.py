@@ -26,7 +26,7 @@ from .messages import (
 )
 
 if TYPE_CHECKING:
-    from ..frontend.map_point import Map, MapPoint
+    from ..frontend.vo.map_point import Map, MapPoint
     from ..frontend.pose import SE3
 
 
@@ -62,7 +62,7 @@ def _mappoint_data_to_mappoint(data: MapPointData) -> MapPoint:
     Returns:
         MapPoint object
     """
-    from ..frontend.map_point import MapPoint
+    from ..frontend.vo.map_point import MapPoint
 
     return MapPoint(
         id=data.id,
@@ -201,7 +201,7 @@ def _backend_main(
     local_mapping = LocalMapping(camera_matrix=camera_matrix, config=config)
 
     # Create a simple in-memory map for the backend
-    from ..frontend.map_point import Map
+    from ..frontend.vo.map_point import Map
 
     backend_map = Map()
     local_mapping.set_map(backend_map)

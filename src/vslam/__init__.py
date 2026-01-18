@@ -4,11 +4,18 @@ __version__ = "0.1.0"
 
 # Re-export main classes for convenient imports
 from .dataset_reader import DatasetReader
-from .io import GroundTruthReader
+from .io import GroundTruthReader, IMUCalibration, IMUMeasurement, IMUReader
 from .frontend import (
-    Map,
     SE3,
     StereoCamera,
+    IMUFrame,
+    IMUIntegrator,
+    IMUOdometry,
+    IMUState,
+    IMUTrackingStatus,
+)
+from .frontend.vo import (
+    Map,
     StereoFrame,
     StereoFrontend,
     TrackingStatus,
@@ -37,11 +44,20 @@ __all__ = [
     # Dataset / I/O
     "DatasetReader",
     "GroundTruthReader",
+    "IMUReader",
+    "IMUMeasurement",
+    "IMUCalibration",
     # SLAM System
     "SLAMSystem",
     "SLAMFrame",
     "SLAMStats",
-    # Visual Odometry
+    # IMU Odometry
+    "IMUOdometry",
+    "IMUFrame",
+    "IMUIntegrator",
+    "IMUState",
+    "IMUTrackingStatus",
+    # Visual Odometry (moved to frontend.vo)
     "VisualOdometry",
     "VOFrame",
     "TrackingStatus",

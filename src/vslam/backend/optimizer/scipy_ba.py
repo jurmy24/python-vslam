@@ -25,7 +25,7 @@ from scipy.sparse import lil_matrix
 
 if TYPE_CHECKING:
     from ..keyframe import Keyframe
-    from ...frontend.map_point import MapPoint
+    from ...frontend.vo.map_point import MapPoint
 
 
 @dataclass

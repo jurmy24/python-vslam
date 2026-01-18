@@ -14,10 +14,10 @@ import cv2
 import numpy as np
 
 if TYPE_CHECKING:
-    from ..frontend.feature_detector import Features
-    from ..frontend.map_point import Map
+    from ..frontend.vo.feature_detector import Features
+    from ..frontend.vo.map_point import Map
     from ..frontend.pose import SE3
-    from ..frontend.visual_odometry import VOFrame
+    from ..frontend.vo.visual_odometry import VOFrame
 
 
 def _rotation_angle_from_matrix(R: np.ndarray) -> float:

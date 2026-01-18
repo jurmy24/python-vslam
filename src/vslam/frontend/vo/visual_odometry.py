@@ -10,7 +10,7 @@ import numpy as np
 
 from .map_point import Map, Observation
 from .motion_estimator import MotionEstimator, PnPResult
-from .pose import SE3
+from ..pose import SE3
 from .stereo_frontend import StereoFrame, StereoFrontend
 from .temporal_matcher import TemporalMatcher
 

@@ -19,7 +19,7 @@ from .keyframe import Keyframe, KeyframeManager
 from .optimizer import BAResult, ScipyBundleAdjustment
 
 if TYPE_CHECKING:
-    from ..frontend.map_point import Map, MapPoint
+    from ..frontend.vo.map_point import Map, MapPoint
     from ..frontend.pose import SE3
 
 

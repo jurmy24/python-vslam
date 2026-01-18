@@ -8,11 +8,11 @@ import numpy as np
 import rerun as rr
 import rerun.blueprint as rrb
 
-from ..frontend.stereo_frontend import StereoFrame
+from ..frontend.vo.stereo_frontend import StereoFrame
 
 if TYPE_CHECKING:
     from ..frontend.pose import SE3
-    from ..frontend.visual_odometry import VOFrame
+    from ..frontend.vo.visual_odometry import VOFrame
 
 
 class RerunVisualizer:
